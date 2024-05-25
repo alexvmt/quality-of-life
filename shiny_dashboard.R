@@ -104,29 +104,21 @@ server <- function(input, output) {
     
     selected_indicator <- input$dropdown_indicator
     
-    if (selected_indicator == "Population") {
-      
-      bins <- c(0, 100000, 250000, 500000, 1000000, 4000000)
-      
-    } else if (selected_indicator == "Area") {
-      
-      bins <- c(0, 500, 1000, 2000, 4000, 6000)
-      
-    } else if (selected_indicator == "Density") {
-      
-      bins <- c(0, 100, 250, 500, 1000, 5000)
-      
-    } else if (selected_indicator == "Income") {
-      
-      bins <- c(0, 20000, 30000, 40000, 50000, 60000)
-      
-    }
-    
-    palette <- colorBin(
+    palette <- colorQuantile(
       palette = "YlOrBr",
       domain = indicators_sf[[selected_indicator]],
-      na.color = "transparent",
-      bins = bins
+      n = 5,
+      na.color = "transparent"
+    )
+    
+    colors <- brewer.pal(n = 5, name = "YlOrBr")
+    
+    labels = c(
+      paste0(0, " - ", round(quantile(indicators_sf[[selected_indicator]], 0.2), 0)),
+      paste0(round(quantile(indicators_sf[[selected_indicator]], 0.2), 0) + 1, " - ", round(quantile(indicators_sf[[selected_indicator]], 0.4), 0)),
+      paste0(round(quantile(indicators_sf[[selected_indicator]], 0.4), 0) + 1, " - ", round(quantile(indicators_sf[[selected_indicator]], 0.6), 0)),
+      paste0(round(quantile(indicators_sf[[selected_indicator]], 0.6), 0) + 1, " - ", round(quantile(indicators_sf[[selected_indicator]], 0.8), 0)),
+      paste0(round(quantile(indicators_sf[[selected_indicator]], 0.8), 0) + 1, " - ", quantile(indicators_sf[[selected_indicator]], 1))
     )
     
     tooltip <- paste(
@@ -159,11 +151,12 @@ server <- function(input, output) {
                                               textsize = "13px",
                                               direction = "auto")
                   ) %>% 
-      addLegend(pal = palette,
+      addLegend(position = "topright",
                 values = ~get(selected_indicator),
+                colors = colors,
                 opacity = 0.9,
-                title = selected_indicator,
-                position = "topright")
+                labels = labels,
+                title = selected_indicator)
     
   })
   
@@ -198,8 +191,8 @@ server <- function(input, output) {
     palette <- colorBin(
       palette = "YlOrBr",
       domain = rctv_indicators_sf()$Score,
-      na.color = "transparent",
-      bins = bins
+      bins = bins,
+      na.color = "transparent"
     )
     
     tooltip <- paste(
@@ -233,11 +226,11 @@ server <- function(input, output) {
                                               textsize = "13px",
                                               direction = "auto")
       ) %>% 
-      addLegend(pal = palette,
+      addLegend(position = "topright",
+                pal = palette,
                 values = ~Score,
                 opacity = 0.9,
-                title = "Score",
-                position = "topright")
+                title = "Score")
     
   })
   
