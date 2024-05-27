@@ -12,3 +12,9 @@
 
 - https://www.statistikportal.de/de/vgrdl/ergebnisse-kreisebene/einkommen-kreise
 - Downloaded on May 24 2024
+
+**Average age**
+
+- https://www.regionalstatistik.de/genesis//online?operation=table&code=12411-07-01-4&bypass=true&levelindex=1&levelid=1716838193796#abreadcrumb
+- Downloaded on May 27 2024
+- Reference date December 31 2022

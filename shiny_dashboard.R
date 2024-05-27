@@ -36,7 +36,8 @@ ui <- dashboardPage(
       conditionalPanel(
         'input.sidebarid == "score_map"',
         sliderInput("density_weight", "Select density (people/km²) weight:", min = 1, max = 5, value = 3),
-        sliderInput("income_weight", "Select income per capita (€) weight:", min = 1, max = 5, value = 3)
+        sliderInput("income_weight", "Select income per capita (€) weight:", min = 1, max = 5, value = 3),
+        sliderInput("age_weight", "Select average age weight:", min = 1, max = 5, value = 3)
       )
     )
   ),
@@ -78,7 +79,7 @@ server <- function(input, output) {
   
   # set parameters for score calculation
   n_tile <- 5
-  n_indicators <- 2
+  n_indicators <- 3
   n_points_per_indicator <- 5
   max_points_per_indicator <- 5
   max_total_points <- n_indicators * n_points_per_indicator * max_points_per_indicator
@@ -127,7 +128,8 @@ server <- function(input, output) {
       "Population: ", indicators_sf$Population, "<br/>",
       "Area: ", indicators_sf$Area, "<br/>",
       "Density: ", indicators_sf$Density, "<br/>",
-      "Income: ", indicators_sf$Income,
+      "Income: ", indicators_sf$Income, "<br/>",
+      "Age: ", indicators_sf$Age,
       sep = "") %>% 
       lapply(htmltools::HTML)
     
@@ -169,12 +171,15 @@ server <- function(input, output) {
     
     density_weight <- input$density_weight
     income_weight <- input$income_weight
+    age_weight <- input$age_weight
     
     indicators_sf <- indicators_sf %>% 
       mutate(density_quantile = ntile(Density, n_tile),
-             income_quantile = ntile(Income, n_tile)) %>% 
+             income_quantile = ntile(Income, n_tile),
+             age_quantile = ntile(Age, n_tile)) %>% 
       mutate(Points = density_quantile * density_weight
-             + income_quantile * income_weight) %>% 
+             + income_quantile * income_weight
+             + age_quantile * age_weight) %>% 
       mutate(Score = round(Points / max_total_points, 2)) %>% 
       arrange(desc(Score))
     
@@ -202,6 +207,7 @@ server <- function(input, output) {
       "Area: ", rctv_indicators_sf()$Area, "<br/>",
       "Density: ", rctv_indicators_sf()$Density, "<br/>",
       "Income: ", rctv_indicators_sf()$Income, "<br/>",
+      "Age: ", rctv_indicators_sf()$Age, "<br/>",
       "Score: ", rctv_indicators_sf()$Score,
       sep = "") %>% 
       lapply(htmltools::HTML)
@@ -275,6 +281,7 @@ server <- function(input, output) {
       "Area: ", row_selected$Area, "<br/>",
       "Density: ", row_selected$Density, "<br/>",
       "Income: ", row_selected$Income, "<br/>",
+      "Age: ", row_selected$Age, "<br/>",
       "Score: ", row_selected$Score,
       sep = "") %>% 
       lapply(htmltools::HTML)
@@ -316,7 +323,8 @@ server <- function(input, output) {
     
     summary_table <- rctv_indicators_sf() %>% 
       select(-density_quantile,
-             -income_quantile) %>% 
+             -income_quantile,
+             -age_quantile) %>% 
       st_drop_geometry()
     
   })
