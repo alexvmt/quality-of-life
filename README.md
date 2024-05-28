@@ -1,5 +1,7 @@
 # Quality of life
 
+Shiny App: https://alexvmt.shinyapps.io/quality-of-life/
+
 ## References
 
 **Districts with population**
