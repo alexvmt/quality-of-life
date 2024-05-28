@@ -1,0 +1,13 @@
+name: quality-of-life
+title: quality-of-life
+username: alexvmt
+account: alexvmt
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 12081989
+bundleId: 8668680
+url: https://alexvmt.shinyapps.io/quality-of-life/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: 12411-07-01-4.xlsx|indicators.ipynb|LICENSE|README.md|VG250_KRS.cpg|VG250_KRS.dbf|VG250_KRS.prj|VG250_KRS.shp|VG250_KRS.shx|vgrdl_r2b3_bs2022.xlsx
